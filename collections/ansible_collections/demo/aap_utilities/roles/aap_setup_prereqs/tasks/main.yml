@@ -1,0 +1,25 @@
+---
+- name: Ensure the hostname is set
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Ensure the system is registered with Red Hat
+  community.general.redhat_subscription:
+    consumer_name: "{{ inventory_hostname }}"
+    username: "{{ redhat_username }}"
+    password: "{{ redhat_password }}"
+    state: present
+
+- name: Ensure the required packages are present for containerized installations
+  ansible.builtin.package:
+    name:
+      - ansible-core
+      - git
+      - insights-client
+      - rsync
+      - wget
+    state: present
+
+- name: Ensure distribution and architecture facts are gathered
+  ansible.builtin.setup:
+    filter: ['architecture', 'distribution_major_version']

@@ -1,0 +1,26 @@
+---
+- name: Ensure the Automation Hub username is updated
+  community.postgresql.postgresql_query:
+    db: "pulp"
+    login_host: "localhost"
+    login_user: "postgres"
+    login_password: "{{ admin_password }}"
+    query: "UPDATE galaxy_user SET username = %s WHERE id = 1"
+    positional_args:
+      - "{{ admin_username }}"
+
+- name: Ensure the Automation Hub token is created
+  community.postgresql.postgresql_query:
+    db: "pulp"
+    login_host: "localhost"
+    login_user: "postgres"
+    login_password: "{{ admin_password }}"
+    query: >-
+      INSERT INTO authtoken_token (key, created, user_id)
+      VALUES (%s, NOW(), 1)
+      ON CONFLICT (user_id)
+      DO UPDATE SET
+        key = EXCLUDED.key,
+        created = EXCLUDED.created
+    positional_args:
+      - "{{ automation_hub_token }}"

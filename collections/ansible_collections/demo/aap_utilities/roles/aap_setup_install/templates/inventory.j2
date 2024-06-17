@@ -1,0 +1,39 @@
+[automationcontroller]
+{{ inventory_hostname }} ansible_connection=local
+
+[automationhub]
+{{ inventory_hostname }} ansible_connection=local
+
+[automationeda]
+{{ inventory_hostname }} ansible_connection=local
+
+[database]
+{{ inventory_hostname }} ansible_connection=local
+
+[all:vars]
+postgresql_admin_username=postgres
+postgresql_admin_password='{{ admin_password }}'
+
+registry_username='{{ redhat_username }}'
+registry_password='{{ redhat_password }}'
+
+bundle_install=true
+bundle_dir='{{ aap_setup_prep_setup_dir }}/bundle'
+
+# Automation Controller
+controller_admin_user='{{ admin_username }}'
+controller_admin_password='{{ admin_password }}'
+controller_pg_host='{{ inventory_hostname }}'
+controller_pg_password='{{ admin_password }}'
+controller_license_file='{{ aap_setup_prep_setup_dir }}/manifest.zip'
+
+# Automation Hub
+hub_admin_password='{{ admin_password }}'
+hub_pg_host='{{ inventory_hostname }}'
+hub_pg_password='{{ admin_password }}'
+
+# EDA Controller
+eda_admin_user='{{ admin_username }}'
+eda_admin_password='{{ admin_password }}'
+eda_pg_host='{{ inventory_hostname }}'
+eda_pg_password='{{ admin_password }}'

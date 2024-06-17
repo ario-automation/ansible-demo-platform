@@ -1,0 +1,30 @@
+---
+- name: Debug testing
+  ansible.builtin.debug:
+    var: aap_setup_prep_setup_dir
+
+- name: Ensure the inventory file is prepared for installation
+  ansible.builtin.template:
+    src: inventory.j2
+    dest: "{{ aap_setup_prep_setup_dir }}/inventory"
+    mode: "0644"
+
+- name: Ensure the manifest is decrypted and available
+  vars:
+    manifest_file: "{{
+        lookup('ansible.builtin.file', 'manifest.zip') |
+        community.sops.decrypt(output_type='binary')
+      }}"
+  ansible.builtin.copy:
+    content: "{{ manifest_file }}"
+    dest: "{{ aap_setup_prep_setup_dir }}/manifest.zip"
+    mode: "0644"
+    owner: ansible
+    group: ansible
+
+- name: Run the containerized installer
+  changed_when: false
+  become: false
+  ansible.builtin.command:
+    chdir: "{{ aap_setup_prep_setup_dir }}"
+    cmd: ansible-playbook -i inventory ansible.containerized_installer.install
