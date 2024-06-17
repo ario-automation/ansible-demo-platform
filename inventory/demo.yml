@@ -1,0 +1,7 @@
+---
+demo:
+  hosts:
+    containerized-aap.sandbox-8fsh4.local:
+      ansible_host: 10.1.0.10
+      ansible_user: ansible
+      ansible_ssh_private_key_file: ~/.ssh/ansible

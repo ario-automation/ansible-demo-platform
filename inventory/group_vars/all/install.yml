@@ -1,0 +1,41 @@
+---
+aap_setup_arch: "{{ ansible_architecture }}"
+aap_setup_down_offline_token: "{{ offline_token }}"
+aap_setup_down_version: 2.4
+aap_setup_rhel_version: "{{ ansible_distribution_major_version }}"
+
+aap_setup_prep_process_template: false
+aap_setup_inst_containerized: true
+aap_setup_containerized: true
+
+aap_setup_prep_inv_nodes:
+  automationcontroller: "{{ groups['automationcontroller'] }}"
+  automationeda: "{{ groups['automationcontroller'] }}"
+  automationhub: "{{ groups['automationcontroller'] }}"
+  database: "{{ groups['automationcontroller'] }}"
+
+aap_setup_prep_inv_vars:
+  all:
+    ansible_connection: local
+    admin_password: "{{ admin_password }}"
+
+    registry_username: "{{ redhat_username }}"
+    registry_password: "{{ redhat_password }}"
+
+    # Automation Controller
+    controller_admin_password: "{{ admin_password }}"
+    controller_pg_host: "{{ groups['automationcontroller'][0] }}"
+
+    # Automation Hub
+    hub_admin_password: "{{ admin_password }}"
+    hub_pg_host: "{{ groups['automationcontroller'][0] }}"
+    hub_pg_password: "{{ admin_password }}"
+
+    # Automation EDA Controller
+    eda_admin_password: "{{ admin_password }}"
+    eda_pg_host: "{{ groups['automationcontroller'][0] }}"
+    eda_pg_password: "{{ admin_password }}"
+
+    # Postgres
+    postgresql_admin_username: postgres
+    postgresql_admin_password: "{{ admin_password }}"

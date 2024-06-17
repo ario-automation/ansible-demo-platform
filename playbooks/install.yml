@@ -1,0 +1,16 @@
+---
+- name: Install the Ansible Automation Platform
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Ensure secrets are imported
+      community.sops.load_vars:
+        file: "../vaults/demo.secret.yml"
+
+  roles:
+    - { role: demo.aap_utilities.aap_setup_prereqs }
+    - { role: infra.aap_utilities.aap_setup_download }
+    - { role: infra.aap_utilities.aap_setup_prepare }
+    - { role: demo.aap_utilities.aap_setup_install }
+    - { role: demo.aap_utilities.aap_setup_postinstall }
