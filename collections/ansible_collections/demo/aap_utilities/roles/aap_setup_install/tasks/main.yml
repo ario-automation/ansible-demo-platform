@@ -1,8 +1,4 @@
 ---
-- name: Debug testing
-  ansible.builtin.debug:
-    var: aap_setup_prep_setup_dir
-
 - name: Ensure the inventory file is prepared for installation
   ansible.builtin.template:
     src: inventory.j2
