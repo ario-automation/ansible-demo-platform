@@ -24,3 +24,23 @@
         created = EXCLUDED.created
     positional_args:
       - "{{ automation_hub_token }}"
+
+- name: Ensure the Automation Controller token is created
+  community.postgresql.postgresql_query:
+    db: "awx"
+    login_host: "localhost"
+    login_user: "postgres"
+    login_password: "{{ admin_password }}"
+    query: >-
+      INSERT INTO main_oauth2accesstoken (user_id, description, token, scope, expires, modified, created, updated)
+      VALUES (1, 'Event Driven Ansible', %s, 'write', NOW() + interval '1000 years', NOW(), NOW(), NOW())
+      ON CONFLICT (token)
+      DO UPDATE SET
+        user_id = EXCLUDED.user_id,
+        description = EXCLUDED.description,
+        scope = EXCLUDED.scope,
+        expires = EXCLUDED.expires,
+        modified = EXCLUDED.modified,
+        updated = EXCLUDED.updated
+    positional_args:
+      - "{{ automation_controller_token }}"
