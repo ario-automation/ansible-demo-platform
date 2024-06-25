@@ -1,0 +1,4 @@
+---
+eda_user_tokens:
+  - name: "Automation Controller"
+    token: "{{ automation_controller_token }}"
