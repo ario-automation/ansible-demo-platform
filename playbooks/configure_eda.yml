@@ -1,0 +1,12 @@
+---
+- name: Ensure that EDA Controller is configured
+  hosts: all
+
+  pre_tasks:
+    - name: Ensure secrets are imported
+      community.sops.load_vars:
+        file: "../vaults/demo.secret.yml"
+
+  roles:
+    - { role: infra.eda_configuration.user_token }
+    - { role: infra.eda_configuration.credential }
