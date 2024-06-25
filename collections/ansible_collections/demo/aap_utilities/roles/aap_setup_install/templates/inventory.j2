@@ -1,11 +1,11 @@
 [automationcontroller]
-{{ inventory_hostname }} ansible_connection=local
+{{ inventory_hostname }} ansible_connection=local nginx_disable_https=true
 
 [automationhub]
-{{ inventory_hostname }} ansible_connection=local
+{{ inventory_hostname }} ansible_connection=local nginx_disable_https=true
 
 [automationeda]
-{{ inventory_hostname }} ansible_connection=local
+{{ inventory_hostname }} ansible_connection=local nginx_disable_https=true
 
 [database]
 {{ inventory_hostname }} ansible_connection=local
@@ -21,6 +21,7 @@ bundle_install=true
 bundle_dir='{{ aap_setup_prep_setup_dir }}/bundle'
 
 # Automation Controller
+controller_main_url='{{ controller_main_url }}'
 controller_admin_user='{{ admin_username }}'
 controller_admin_password='{{ admin_password }}'
 controller_secret_key='{{ automation_controller_secret }}
@@ -29,11 +30,13 @@ controller_pg_password='{{ admin_password }}'
 controller_license_file='{{ aap_setup_prep_setup_dir }}/manifest.zip'
 
 # Automation Hub
+hub_main_url='{{ hub_main_url }}'
 hub_admin_password='{{ admin_password }}'
 hub_pg_host='{{ inventory_hostname }}'
 hub_pg_password='{{ admin_password }}'
 
 # EDA Controller
+eda_main_url='{{ eda_main_url }}'
 eda_admin_user='{{ admin_username }}'
 eda_admin_password='{{ admin_password }}'
 eda_pg_host='{{ inventory_hostname }}'
