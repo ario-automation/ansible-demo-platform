@@ -1,0 +1,6 @@
+---
+ah_ee_registries:
+  - name: Red Hat
+    url: https://registry.redhat.io
+    username: "{{ redhat_username }}"
+    password: "{{ redhat_password }}"

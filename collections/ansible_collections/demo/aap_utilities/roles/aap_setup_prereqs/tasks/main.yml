@@ -3,6 +3,11 @@
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
 
+- name: Ensure there is a hosts entry for the hostname
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{ inventory_hostname }}"
+
 - name: Ensure the system is registered with Red Hat
   community.general.redhat_subscription:
     consumer_name: "{{ inventory_hostname }}"

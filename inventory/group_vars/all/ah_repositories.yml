@@ -1,0 +1,34 @@
+---
+ah_collection_remotes:
+  - name: community
+    url: https://galaxy.ansible.com/api/
+    requirements:
+      - name: ansibleguy.opnsense
+      - name: awx.awx
+      - name: community.aws
+      - name: community.digitalocean
+      - name: community.general
+      - name: community.network
+      - name: community.postgresql
+      - name: community.routeros
+      - name: community.sops
+      - name: community.vmware
+      - name: community.windows
+      - name: containers.podman
+      - name: netbox.netbox
+      - name: pfsensible.core
+      - name: pfsensible.haproxy
+      - name: vultr.cloud
+  - name: rh-certified
+    token: "{{ cloud_token }}"
+    url: https://console.redhat.com/api/automation-hub/content/published/
+    auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+  - name: validated
+    token: "{{ cloud_token }}"
+    url: https://console.redhat.com/api/automation-hub/content/validated/
+    auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+
+ah_collection_repositories:
+  - { name: "community", remote: "community" }
+  - { name: "rh-certified", remote: "rh-certified" }
+  - { name: "validated", remote: "validated" }

@@ -1,0 +1,13 @@
+---
+- name: Ensure that Automation Hub is configured
+  hosts: all
+
+  pre_tasks:
+    - name: Ensure secrets are imported
+      community.sops.load_vars:
+        file: "../vaults/demo.secret.yml"
+
+  roles:
+    - { role: infra.ah_configuration.collection_remote }
+    - { role: infra.ah_configuration.collection_repository }
+    - { role: infra.ah_configuration.ee_registry }
