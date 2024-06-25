@@ -4,3 +4,7 @@ ah_ee_registries:
     url: https://registry.redhat.io
     username: "{{ redhat_username }}"
     password: "{{ redhat_password }}"
+  - name: GitHub
+    url: https://ghcr.io
+    username: "{{ github_username }}"
+    password: "{{ github_token}}"
