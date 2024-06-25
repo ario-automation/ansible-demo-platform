@@ -1,0 +1,17 @@
+---
+controller_hostname: "http://{{ inventory_hostname }}:{{ controller_http_port | default(8080) }}"
+controller_username: "{{ admin_username | default('admin') }}"
+controller_password: "{{ admin_password }}"
+controller_validate_certs: false
+
+ah_host: "http://{{ inventory_hostname }}:{{ ah_http_port | default(8081) }}"
+ah_username: "{{ admin_username | default('admin') }}"
+ah_password: "{{ admin_password }}"
+ah_path_prefix: "galaxy"
+ah_validate_certs: false
+ah_verify_ssl: false
+
+eda_hostname: "http://{{ inventory_hostname }}:{{ eda_http_port | default(8082) }}"
+eda_username: "{{ admin_username | default('admin') }}"
+eda_password: "{{ admin_password }}"
+eda_validate_certs: false

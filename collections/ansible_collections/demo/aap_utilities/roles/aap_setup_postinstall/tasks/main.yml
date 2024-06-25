@@ -44,3 +44,94 @@
         updated = EXCLUDED.updated
     positional_args:
       - "{{ automation_controller_token }}"
+
+- name: Ensure the demo organization does not exist
+  ansible.controller.organization:
+    controller_host: "{{ controller_hostname }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    name: "Default"
+    state: "absent"
+
+- name: Ensure the Demo Job Template does not exist
+  ansible.controller.job_template:
+    controller_host: "{{ controller_hostname }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    name: "Demo Job Template"
+    state: "absent"
+
+- name: Ensure the Demo Credential does not exist
+  ansible.controller.credential:
+    controller_host: "{{ controller_hostname }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    name: "Demo Credential"
+    credential_type: "Machine"
+    state: "absent"
+
+- name: Ensure the Demo Project does not exist
+  ansible.controller.project:
+    controller_host: "{{ controller_hostname }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    validate_certs: "{{ controller_validate_certs }}"
+    name: "Demo Project"
+    state: "absent"
+
+- name: Ensure the 'dnf-command(copr)' plugin is installed
+  become: true
+  ansible.builtin.dnf:
+    name: "dnf-command(copr)"
+    state: present
+
+- name: Ensure @caddy/caddy is enabled
+  become: true
+  ansible.builtin.command: "dnf copr enable @caddy/caddy -y"
+  args:
+    creates: "/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:group_caddy:caddy.repo"
+
+- name: Ensure caddy is installed
+  become: true
+  ansible.builtin.dnf:
+    name: "caddy"
+    state: present
+
+- name: Ensure the caddy service is enabled
+  become: true
+  ansible.builtin.systemd:
+    name: "caddy"
+    enabled: true
+
+- name: Ensure the firewall is configured
+  loop:
+    - { service: "http", state: "enabled" }
+    - { service: "https", state: "enabled" }
+    - { service: "ssh", state: "enabled" }
+    - { port: "8080/tcp", state: "disabled" }
+    - { port: "8081/tcp", state: "disabled" }
+    - { port: "8082/tcp", state: "disabled" }
+    - { service: "cockpit", state: "disabled" }
+  ansible.posix.firewalld:
+    state: "{{ item.state | default('enabled') }}"
+    port: "{{ item.port | default(omit) }}"
+    protocol: "{{ item.protocol | default(omit) }}"
+    service: "{{ item.service | default(omit) }}"
+    immediate: true
+    permanent: true
+    zone: public
+
+- name: Ensure the Caddyfile is deployed
+  register: caddyfile
+  ansible.builtin.template:
+    src: "Caddyfile.j2"
+    dest: "/etc/caddy/Caddyfile"
+    owner: "caddy"
+    group: "caddy"
+    mode: "0644"
+
+- name: Ensure the Caddyfile is reloaded if required
+  when: caddyfile.changed
+  ansible.builtin.service:
+    name: "caddy"
+    state: reloaded
